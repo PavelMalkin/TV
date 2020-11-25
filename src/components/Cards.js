@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import axios from 'axios';
-import {addCoordinates} from '../redux/actions/usersActions'
-import {getContactCoordinates} from '../redux/appThunk'
+import { getContactCoordinates } from '../redux/appThunk'
 import {SingleCard} from "./SingleCard";
 import {Grid, IconButton} from "@material-ui/core";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
@@ -20,17 +18,20 @@ export function Cards() {
 
     useEffect(() => {
         contacts.contacts.forEach(contact => {
-            if (!contact.coordinates) {
-                // dispatch(getContactCoordinates([contact.id, contact.name]))
+            if (!contact.hasFetched && !contact.isFetching) {
+                console.log('test if working')
+               dispatch(getContactCoordinates());
 
-                axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${contact.address}&key=AIzaSyCS3U4Rmj5fzxOZz-F0zlmhbdv1pMkUtJ8`)
-                    .then(res =>
-                        dispatch(addCoordinates([contact.id, res.data.results[0].geometry.location]))
-                    )
-                    .catch(err => console.log(err))
+                // {id:contact.id, city:contact.name}
+
+                // axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${contact.address}&key=AIzaSyCS3U4Rmj5fzxOZz-F0zlmhbdv1pMkUtJ8`)
+                //     .then(res =>
+                //         dispatch(addCoordinates([contact.id, res.data.results[0].geometry.location]))
+                //     )
+                //     .catch(err => console.log(err))
             }
         })
-    }, [contacts])
+    }, [contacts, dispatch])
 
     const handleAddClick = () => {
         setNewCont(true);
